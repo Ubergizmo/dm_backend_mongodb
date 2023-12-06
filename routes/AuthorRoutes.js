@@ -8,7 +8,7 @@ const authorSch = require('../model/authorShema');
 router.get('/', async (req, res) => {
     try {
         const response = await authorSch.find();
-        res.send({ totalAutheurs: response.length });
+        res.send({ totalAutheurs: response.length, autheurs: response });
     } catch (err) {
         res.status(500).json({ message_err: err.message })
     }
@@ -20,7 +20,7 @@ router.get('/:id', oneAuthor, (req, res) => {
 
 });
 //update un autheur
-router.patch('/:id', oneAuthor, async (req, res) => {
+router.put('/:id', oneAuthor, async (req, res) => {
     if (req.body.first_name != null) res.response.first_name = req.body.first_name;
     if (req.body.familly_name != null) res.response.familly_name = req.body.familly_name;
     if (req.body.date_of_birth != null) res.response.date_of_birth = req.body.date_of_birth;
@@ -56,6 +56,7 @@ router.post('/', async (req, res) => {
         res.status(400).json({ message_err: err.message });
     }
 });
+//fonction pour retourner un seul élément grâce à son id
 async function oneAuthor(req, res, next) {
     let response;
     try {

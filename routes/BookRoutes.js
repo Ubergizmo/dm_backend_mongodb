@@ -8,7 +8,7 @@ const bookSch = require('../model/bookSchema');
 router.get('/', async (req, res) => {
     try {
         const response = await bookSch.find();
-        res.send({ totalLivres: response.length });
+        res.send({ totalLivres: response.length, livres: response });
     } catch (err) {
         res.status(500).json({ message_err: err.message })
     }
@@ -20,7 +20,7 @@ router.get('/:id', oneBook, (req, res) => {
 
 })
 //update un livre
-router.patch('/:id', oneBook, async (req, res) => {
+router.put('/:id', oneBook, async (req, res) => {
     if (req.body.title != null) res.response.title = req.body.title;
     if (req.body.author != null) res.response.author = req.body.author;
     if (req.body.isbn != null) res.response.isbn = req.body.isbn;
@@ -56,7 +56,16 @@ router.post('/', async (req, res) => {
         res.status(400).json({ message_err: err.message });
     }
 })
-
+//retrouver tous les livres d'un autheur
+router.get('/authors/:authorId', async (req, res) => {
+    try {
+        const authorBooks = await bookSch.find({ 'author': req.params.authorId });
+        res.json({ authorBooks });
+    } catch (err) {
+        res.status(500).json({ message_err: err.message });
+    }
+});
+//fonction pour retourner un seul élément grâce à son id
 async function oneBook(req, res, next) {
     let response;
     try {
@@ -68,7 +77,7 @@ async function oneBook(req, res, next) {
         return res.status(500).json({ message_err: err.message });
     }
     res.response = response;
-    next(); // Appeler next() ici pour passer à la prochaine fonction middleware ou à la route principale
+    next();
 }
 
 module.exports = router;
