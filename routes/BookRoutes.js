@@ -24,6 +24,7 @@ router.put('/:id', oneBook, async (req, res) => {
     if (req.body.title != null) res.response.title = req.body.title;
     if (req.body.author != null) res.response.author = req.body.author;
     if (req.body.isbn != null) res.response.isbn = req.body.isbn;
+    if (req.body.summary != null) res.response.summary = req.body.summary;
     try {
         const updateResponse = await res.response.save();
         res.json({ updateResponse })

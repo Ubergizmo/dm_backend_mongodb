@@ -105,6 +105,8 @@ async function UpdateBookComponent(tmp_id) {
     </select>
     <label for="summary">Summary</label>
     <input type="text" name="summary" />
+    <label for="isbn">ISBN</label>
+    <input type="text" name="isbn" id="isbn" pattern="\d+" title="uniquement des chiffres!!"  />
     <button onClick="updateBook('${tmp_id}')">Submit</button>
 </div> `;
     appSection.innerHTML = authorsListHTML;
@@ -114,15 +116,23 @@ async function updateBook(tmp_id) {
     const title = document.querySelector('input[name="title"]').value;
     const author = document.querySelector('select[name="author"]').value;
     const summary = document.querySelector('input[name="summary"]').value;
+    const isbn = document.querySelector('input[name="isbn"]').value;
 
-    if (!title || !author || !summary) {
+    if (!title || !author || !summary || !isbn) {
         alert("Veuillez remplir tous les champs obligatoires.");
+        return;
+    }
+    const isbnRegex = /^\d+$/;
+    if (!isbnRegex.test(isbn)) {
+        alert("uniquement des chiffres pour l'ISBN.");
+        isbnInput.focus();
         return;
     }
     const formDatas = {
         title: title,
         author: author,
         summary: summary,
+        isbn: isbn,
     };
 
     try {
